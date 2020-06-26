@@ -37,8 +37,8 @@ with open(filepath) as csvfile:
     #print(profit_change)
 
     #Find the change in profit between the first and last period and divide by the number of months-1 for average profit change
-    absolute_profit_change = profit[len(total_months)-1]-profit[0]
-    average_profit_change = absolute_profit_change/(len(total_months)-1)
+    absolute_profit_change = profit[total_months-1]-profit[0]
+    average_profit_change = absolute_profit_change/((total_months)-1)
     #print(average_profit_change)
 
     #Find the greatest increase in profits over the entire period
@@ -71,6 +71,6 @@ with open(filepath) as csvfile:
     print(f"Greatest Decrease in Profits: {min_month} , (${min_profit})")
     
 #print to text file
-text_file = open("Output.txt", "w")
+text_file = open("Analysis/Output.txt", "w")
 text_file.writelines(f"Financial Analysis \n-------------------------- \nTotal Months: {total_months} \nTotal: ${total_profit} \nAverage Change: ${average_profit_change:0.2f} \nGreatest Increase in Profits: {max_month} , (${max_profit}) \nGreatest Decrease in Profits: {min_month} , (${min_profit})")
 text_file.close()
