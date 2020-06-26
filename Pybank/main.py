@@ -1,4 +1,4 @@
-
+#import dependencies
 import os
 import csv
 
@@ -11,12 +11,11 @@ with open(filepath) as csvfile:
     datareader = csv.reader(csvfile,delimiter=",")
     header = next(datareader)
 
-    #create lists to hold months and profit
+    #create lists to hold months, profit and profit change
     months = []
     profit = []
     profit_change = []
 
-    
     for row in datareader:
         #Create a list of all month data
         months.append(row[0])
@@ -34,31 +33,44 @@ with open(filepath) as csvfile:
     #print(total_profit)   
     
     #Find the changes in "Profit/Losses" over the entire period
-    profit_change = [profit[i] - profit[i-1] for i in range(2,len(profit))]
+    profit_change = [profit[i] - profit[i-1] for i in range(2,len(profit))]     
     #print(profit_change)
 
-    #Find the average of the changes in "Profit/Losses" over the entire period, convert profit change to absolute values
-    absolute_profit_change = map(abs,profit_change)
-   
-    #print(list(absolute_profit_change))
-    average_profit_change=sum(absolute_profit_change)/total_months
+    #Find the change in profit between the first and last period and divide by the number of months-1 for average profit change
+    absolute_profit_change = profit[len(total_months)-1]-profit[0]
+    average_profit_change = absolute_profit_change/(len(total_months)-1)
     #print(average_profit_change)
 
-    #Find the greatest increase in profits (date and amount) over the entire period
+    #Find the greatest increase in profits over the entire period
     max_profit=max(profit_change)
     #print(max_profit)
-    
-    #max_profit_date=row(0) while row(1) in datareader == max_profit
-    #print(max_profit_date)
 
-    # Find the greatest decrease in losses (date and amount) over the entire period
-    min_profit = min(profit_change)
+    #Find the corresponding month for profit increase, remembering there are 2 additional rows at beginning of month and profit data
+    index_max = profit_change.index(max_profit)+2
+    #print(index_max)
+    max_month = months[index_max]
+    #print(max_month)
+
+    # Find the greatest decrease in losses over the entire period
+    min_profit=min(profit_change)
     #print(min_profit)
 
+    #Find the corresponding month for loss decrease, remembering there are 2 additional rows to month and profit data
+    index_min = profit_change.index(min_profit)+2
+    #print(index_min)
+    min_month = months[index_min]
+    #print(min_month)
+
+#print results to terminal
     print("Financial Analysis")
     print("--------------------------")
     print(f"Total Months: {total_months}")
-    print(f"Total: {total_profit}")
-    print(f"Average Change: {average_profit_change}")
-    print(f"Greatest Increase in Profits: max_profit_date , ({max_profit})")
-    print(f"Greatest Decrease in Profits: min_profit_date , ({min_profit})")
+    print(f"Total: ${total_profit}")
+    print(f"Average Change: ${average_profit_change:0.2f}")
+    print(f"Greatest Increase in Profits: {max_month} , (${max_profit})")
+    print(f"Greatest Decrease in Profits: {min_month} , (${min_profit})")
+    
+#print to text file
+text_file = open("Output.txt", "w")
+text_file.writelines(f"Financial Analysis \n-------------------------- \nTotal Months: {total_months} \nTotal: ${total_profit} \nAverage Change: ${average_profit_change:0.2f} \nGreatest Increase in Profits: {max_month} , (${max_profit}) \nGreatest Decrease in Profits: {min_month} , (${min_profit})")
+text_file.close()
