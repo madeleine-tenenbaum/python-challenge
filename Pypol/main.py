@@ -5,15 +5,13 @@ import csv
 #Path to csv file
 filepath = os.path.join("Resources","02-Homework_03-Python_Instructions_PyPoll_Resources_election_data.csv")
 
-# Define the function and have it accept the 'pol_data' as its sole parameter
-
 #assign variables
 candidate_list=[]
 candidates=[]
 candidate_votes=[]
+candidate_percent=[]
 voters=[]
-unique_candidates:[]
-    # winner = max()
+unique_candidates=[]
     
 
 #open and read csv
@@ -37,22 +35,19 @@ with open(filepath) as csvfile:
     unique_candidates = list(set(candidate_list))
     #print(unique_candidates)
 
-    #calc votes and vote percentage for first candidate
-    Can1_votes = candidate_list.count(unique_candidates[0])
-    Can1_perc = Can1_votes/total_votes*100
-    #calc votes and vote percentage for second candidate
-    Can2_votes = candidate_list.count(unique_candidates[1])
-    Can2_perc = Can2_votes/total_votes*100
-    #calc votes and vote percentage for third candidate
-    Can3_votes = candidate_list.count(unique_candidates[2])
-    Can3_perc = Can3_votes/total_votes*100
-    #calc votes and vote percentage for third candidate
-    Can4_votes = candidate_list.count(unique_candidates[3])
-    Can4_perc = Can4_votes/total_votes*100
     
-    #build list with candidate votes to extract max votes (winner)
-    candidate_votes=[Can1_votes,Can2_votes,Can3_votes,Can4_votes]
-    #calc max votes
+    #find total votes for each candidate
+    for politicians in unique_candidates:
+        can_votes= candidate_list.count(politicians)
+        candidate_votes.append(can_votes)
+    #print(candidate_votes)
+
+    #find % votes for each candidate
+    for politicians in unique_candidates:
+        can_perc= candidate_list.count(politicians)/total_votes*100
+        candidate_percent.append(can_perc)
+    #print(candidate_percent)
+    
     max_candidate_votes=max(candidate_votes)
     #print(max_candidate_votes)
     #find index for max votes
@@ -68,15 +63,16 @@ print("Election Results")
 print("---------------------------")
 print(f"Total Votes: {total_votes}")
 print("---------------------------")
-print(f"{unique_candidates[0]} : {Can1_perc:0.3f}% : ({Can1_votes})")
-print(f"{unique_candidates[1]} : {Can2_perc:0.3f}% : ({Can2_votes})")
-print(f"{unique_candidates[2]} : {Can3_perc:0.3f}% : ({Can3_votes})")
-print(f"{unique_candidates[3]} : {Can4_perc:0.3f}% : ({Can4_votes})")
+for i, politicians in enumerate(unique_candidates):
+    print(f"{politicians} : {candidate_percent[i]:0.3f}% : ({candidate_votes[i]})")
 print("---------------------------")
 print(f"Winner: {winner}")
 print("---------------------------")
 
 #print to text file
 text_file = open("Analysis/Output.txt", "w")
-text_file.writelines(f"Election Results\n--------------------------- \nTotal Votes: {total_votes} \n---------------------------\n{unique_candidates[0]} : {Can1_perc:0.3f}% : ({Can1_votes}) \n{unique_candidates[1]} : {Can2_perc:0.3f}% : ({Can2_votes}) \n{unique_candidates[2]} : {Can3_perc:0.3f}% : ({Can3_votes}) \n{unique_candidates[3]} : {Can4_perc:0.3f}% : ({Can4_votes}) \n--------------------------- \nWinner: {winner} \n---------------------------")
+text_file.writelines(f"Election Results\n--------------------------- \nTotal Votes: {total_votes} \n---------------------------\n")
+for i, politicians in enumerate(unique_candidates):
+    text_file.writelines(f"{politicians} : {candidate_percent[i]:0.3f}% : ({candidate_votes[i]})\n")
+text_file.writelines(f"--------------------------- \nWinner: {winner} \n---------------------------")
 text_file.close()
